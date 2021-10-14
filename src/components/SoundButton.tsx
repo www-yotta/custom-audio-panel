@@ -1,40 +1,33 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState, useContext } from "react";
 import { useDropzone } from "react-dropzone";
-import { useForm } from "react-hook-form";
 import styles from "./SoundButton.module.scss";
+import { SettingContext } from "../App";
 
 type SoundButtonProps = {
   name?: string;
 };
 export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
-  const { register, unregister, setValue, watch } = useForm();
-  const fileData = watch("sound");
+  const isSetting = useContext(SettingContext);
   const [audio, setAudio] = useState<HTMLAudioElement>(new Audio());
-  console.log("audio", audio);
   const [name, setName] = useState<string>("");
-  const onDrop = useCallback((droppedFiles) => {
-    console.log("droppedFiles", droppedFiles);
+  // ファイルが選択された時
+  const onDrop = useCallback((droppedFiles, e) => {
     setName(droppedFiles[0].name);
     readFile(droppedFiles[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "",
   });
 
   useEffect(() => {
     if (!strageName) return;
     const audioData = localStorage.getItem(strageName);
-    console.log("audioData", audioData);
-    if (audioData) setAudio(new Audio(audioData));
-  }, []);
-
-  useEffect(() => {
-    register("sound");
-    return () => {
-      unregister("sound");
-    };
+    // console.log("audioData", audioData);
+    if (audioData) {
+      setAudio(new Audio(JSON.parse(audioData).audio));
+      setName(JSON.parse(audioData).name);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -49,9 +42,12 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
       setAudio(new Audio(fileBinary));
       // console.log("read file", fileBinary);
       if (strageName) {
-        localStorage.setItem(strageName, fileBinary);
+        const tmp = {
+          name: file.name,
+          audio: fileBinary,
+        };
+        localStorage.setItem(strageName, JSON.stringify(tmp));
       }
-      setValue("sound", fileBinary, { shouldValidate: true });
     };
     reader.onabort = () => console.log("file reading was aborted");
     reader.onerror = () => console.log("file reading has failed");
@@ -63,13 +59,25 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   return (
     <>
       {audio.src ? (
-        <div className={styles.root} onClick={play}>
-          <p>{name}</p>
+        <div className={styles.root}>
+          <div
+            // TODO: 見直したい
+            className={styles.clickArea + (isSetting ? " " + styles.edit : "")}
+            onClick={play}
+          >
+            {name}
+          </div>
+          {isSetting && (
+            <p className={styles.changeButton} {...getRootProps()}>
+              <input {...getInputProps()} />
+              変更
+            </p>
+          )}
         </div>
       ) : (
         <div className={styles.root} {...getRootProps()}>
           <input {...getInputProps()} />
-          <p>音声を登録する</p>
+          <p>登録する</p>
         </div>
       )}
     </>

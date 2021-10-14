@@ -6,4 +6,29 @@
   font-size: 12px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .clickArea {
+    width: 100%;
+    border-radius: 10px;
+    background-color: #fa9;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.edit {
+      border-radius: 10px 10px 0 0;
+    }
+  }
+  .changeButton {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 0 0 10px 10px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
