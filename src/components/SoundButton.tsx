@@ -2,12 +2,15 @@ import { FC, useCallback, useEffect, useState, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import styles from "./SoundButton.module.scss";
 import { SettingContext } from "../App";
+import { FaRegTimesCircle } from "react-icons/fa";
 
 type SoundButtonProps = {
   name?: string;
 };
 export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
-  const isSetting = useContext(SettingContext);
+  const { isSetting, isAllDelete } = useContext(SettingContext);
+  console.log("isSetting", isSetting);
+  console.log("isAllDelete", isAllDelete);
   const [audio, setAudio] = useState<HTMLAudioElement>(new Audio());
   const [name, setName] = useState<string>("");
   // ファイルが選択された時
@@ -23,7 +26,7 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   useEffect(() => {
     if (!strageName) return;
     const audioData = localStorage.getItem(strageName);
-    // console.log("audioData", audioData);
+    console.log("audioData", audioData);
     if (audioData) {
       setAudio(new Audio(JSON.parse(audioData).audio));
       setName(JSON.parse(audioData).name);
@@ -33,6 +36,20 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
 
   const play = () => audio.play();
 
+  const deleteAudio = () => {
+    if (!strageName) return;
+    localStorage.removeItem(strageName);
+    setAudio(new Audio());
+    setName("");
+  };
+
+  useEffect(() => {
+    if (isAllDelete) {
+      setAudio(new Audio());
+      setName("");
+    }
+  }, [isAllDelete]);
+
   const readFile = (file: any) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -40,7 +57,6 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
       // TODO: ここの設定を見直したい
       if (typeof fileBinary !== "string") return;
       setAudio(new Audio(fileBinary));
-      // console.log("read file", fileBinary);
       if (strageName) {
         const tmp = {
           name: file.name,
@@ -68,10 +84,18 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
             {name}
           </div>
           {isSetting && (
-            <p className={styles.changeButton} {...getRootProps()}>
-              <input {...getInputProps()} />
-              変更
-            </p>
+            <>
+              <p className={styles.changeButton} {...getRootProps()}>
+                <input {...getInputProps()} />
+                変更
+              </p>
+              <FaRegTimesCircle
+                fill="#333"
+                size={20}
+                className={styles.deleteIcon}
+                onClick={deleteAudio}
+              />
+            </>
           )}
         </div>
       ) : (

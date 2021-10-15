@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  position: relative;
   .clickArea {
     width: 100%;
     border-radius: 10px;
@@ -30,5 +31,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .deleteIcon {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
