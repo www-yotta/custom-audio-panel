@@ -46,10 +46,8 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   };
 
   useEffect(() => {
-    if (isAllDelete) {
-      setAudio(null);
-      setName("");
-    }
+    setAudio(null);
+    setName("");
   }, [isAllDelete]);
 
   const handleKeyDownPlay = useCallback(
@@ -109,6 +107,7 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
                 変更
               </p>
               <FaRegTimesCircle
+                // TODO: themeを作成して管理したい
                 fill="#333"
                 size={20}
                 className={styles.deleteIcon}

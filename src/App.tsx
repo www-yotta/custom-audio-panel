@@ -20,7 +20,7 @@ export const App: FC = () => {
   const handleSettingToggle = () => setIsSetting(!isSetting);
   const deleteAllAudio = () => {
     localStorage.clear();
-    setIsAllDelete(true);
+    setIsAllDelete(!isAllDelete);
   };
 
   return (
