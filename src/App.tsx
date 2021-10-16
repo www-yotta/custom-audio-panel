@@ -26,12 +26,13 @@ export const App: FC = () => {
     localStorage.clear();
     setIsAllDelete(!isAllDelete);
   };
-  const handleStopAudio = (event: any) => {
+  const handleStopAudio = () => setIsStopAudio(!isStopAudio);
+  const handleKeyDownStop = (event: any) => {
     if (event.keyCode === audioKey["stop"]) {
       setIsStopAudio(!isStopAudio);
     }
   };
-  document.addEventListener("keydown", handleStopAudio);
+  document.addEventListener("keydown", handleKeyDownStop);
 
   return (
     <SettingContext.Provider value={{ isSetting, isAllDelete, isStopAudio }}>
