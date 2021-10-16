@@ -43,7 +43,7 @@ export const App: FC = () => {
           {Array(AUDIO_PANEL_COUNT)
             .fill(null)
             .map((_, i) => (
-              <SoundButton name={`audio${i}`} key={`audio${i}`} />
+              <SoundButton name={`audio${i + 1}`} key={`audio${i + 1}`} />
             ))}
         </div>
       </div>

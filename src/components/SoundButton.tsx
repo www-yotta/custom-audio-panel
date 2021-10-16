@@ -3,13 +3,14 @@ import { useDropzone } from "react-dropzone";
 import styles from "./SoundButton.module.scss";
 import { SettingContext } from "../App";
 import { FaRegTimesCircle } from "react-icons/fa";
+import { audioKey } from "../utils/audioKeyBind";
 
 type SoundButtonProps = {
   name?: string;
 };
 export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   const { isSetting, isAllDelete } = useContext(SettingContext);
-  const [audio, setAudio] = useState<HTMLAudioElement>(new Audio());
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [name, setName] = useState<string>("");
   // ファイルが選択された時
   const onDrop = useCallback((droppedFiles, e) => {
@@ -31,24 +32,42 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const play = () => {
+  const play = useCallback(() => {
+    if (!audio) return;
     audio.load();
     audio.play();
-  };
+  }, [audio]);
 
   const deleteAudio = () => {
     if (!strageName) return;
     localStorage.removeItem(strageName);
-    setAudio(new Audio());
+    setAudio(null);
     setName("");
   };
 
   useEffect(() => {
     if (isAllDelete) {
-      setAudio(new Audio());
+      setAudio(null);
       setName("");
     }
   }, [isAllDelete]);
+
+  const handleKeyDownPlay = useCallback(
+    (event: any) => {
+      if (!strageName || !audio || !audio.src) return;
+      if (event.keyCode === audioKey[strageName]) {
+        play();
+      }
+    },
+    [audio, play, strageName]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDownPlay);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDownPlay);
+    };
+  }, [handleKeyDownPlay]);
 
   const readFile = (file: any) => {
     const reader = new FileReader();
@@ -74,7 +93,7 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
 
   return (
     <>
-      {audio.src ? (
+      {audio && audio.src ? (
         <div className={styles.root}>
           <div
             // TODO: 見直したい
