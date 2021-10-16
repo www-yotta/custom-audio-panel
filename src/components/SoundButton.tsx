@@ -9,9 +9,10 @@ type SoundButtonProps = {
   name?: string;
 };
 export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
-  const { isSetting, isAllDelete } = useContext(SettingContext);
+  const { isSetting, isAllDelete, isStopAudio } = useContext(SettingContext);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [name, setName] = useState<string>("");
+  const [time, setTime] = useState<number>(0);
   // ファイルが選択された時
   const onDrop = useCallback((droppedFiles, e) => {
     setName(droppedFiles[0].name);
@@ -46,9 +47,18 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   };
 
   useEffect(() => {
+    if (time === 0) {
+      setTime(1);
+      return;
+    }
     setAudio(null);
     setName("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAllDelete]);
+
+  useEffect(() => {
+    audio?.pause();
+  }, [audio, isStopAudio]);
 
   const handleKeyDownPlay = useCallback(
     (event: any) => {
