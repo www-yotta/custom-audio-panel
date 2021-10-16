@@ -3,6 +3,7 @@ import { SoundButton } from "./components/SoundButton";
 import styles from "./App.module.scss";
 import "./App.css";
 import { FaCog, FaTrashAlt, FaStop } from "react-icons/fa";
+import { audioKey } from "./utils/audioKeyBind";
 
 type SettingContextProps = {
   isSetting: boolean;
@@ -25,9 +26,12 @@ export const App: FC = () => {
     localStorage.clear();
     setIsAllDelete(!isAllDelete);
   };
-  const handleStopAudio = () => {
-    setIsStopAudio(!isStopAudio);
+  const handleStopAudio = (event: any) => {
+    if (event.keyCode === audioKey["stop"]) {
+      setIsStopAudio(!isStopAudio);
+    }
   };
+  document.addEventListener("keydown", handleStopAudio);
 
   return (
     <SettingContext.Provider value={{ isSetting, isAllDelete, isStopAudio }}>

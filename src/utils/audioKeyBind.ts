@@ -19,4 +19,5 @@ export const audioKey: { [key: string]: number } = {
   audio18: 67,
   audio19: 86,
   audio20: 66,
+  stop: 32,
 };
