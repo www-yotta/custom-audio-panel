@@ -14,6 +14,7 @@ export const SettingContext = createContext<SettingContextProps>({
 });
 
 export const App: FC = () => {
+  const AUDIO_PANEL_COUNT = 20;
   const [isSetting, setIsSetting] = useState<boolean>(false);
   const [isAllDelete, setIsAllDelete] = useState<boolean>(false);
   const handleSettingToggle = () => setIsSetting(!isSetting);
@@ -39,26 +40,11 @@ export const App: FC = () => {
           )}
         </div>
         <div className={styles.panel}>
-          <SoundButton name="audio1" />
-          <SoundButton name="audio2" />
-          <SoundButton name="audio3" />
-          <SoundButton name="audio4" />
-          <SoundButton name="audio5" />
-          <SoundButton name="audio6" />
-          <SoundButton name="audio7" />
-          <SoundButton name="audio8" />
-          <SoundButton name="audio9" />
-          <SoundButton name="audio10" />
-          <SoundButton name="audio11" />
-          <SoundButton name="audio12" />
-          <SoundButton name="audio13" />
-          <SoundButton name="audio14" />
-          <SoundButton name="audio15" />
-          <SoundButton />
-          <SoundButton />
-          <SoundButton />
-          <SoundButton />
-          <SoundButton />
+          {Array(AUDIO_PANEL_COUNT)
+            .fill(null)
+            .map((_, i) => (
+              <SoundButton name={`audio${i}`} key={`audio${i}`} />
+            ))}
         </div>
       </div>
     </SettingContext.Provider>

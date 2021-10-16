@@ -9,8 +9,6 @@ type SoundButtonProps = {
 };
 export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   const { isSetting, isAllDelete } = useContext(SettingContext);
-  console.log("isSetting", isSetting);
-  console.log("isAllDelete", isAllDelete);
   const [audio, setAudio] = useState<HTMLAudioElement>(new Audio());
   const [name, setName] = useState<string>("");
   // ファイルが選択された時
@@ -26,7 +24,6 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   useEffect(() => {
     if (!strageName) return;
     const audioData = localStorage.getItem(strageName);
-    console.log("audioData", audioData);
     if (audioData) {
       setAudio(new Audio(JSON.parse(audioData).audio));
       setName(JSON.parse(audioData).name);
@@ -34,7 +31,10 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const play = () => audio.play();
+  const play = () => {
+    audio.load();
+    audio.play();
+  };
 
   const deleteAudio = () => {
     if (!strageName) return;
