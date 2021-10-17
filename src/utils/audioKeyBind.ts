@@ -21,3 +21,27 @@ export const audioKey: { [key: string]: number } = {
   audio20: 66,
   stop: 32,
 };
+
+export const keyBackGround: { [key: string]: string } = {
+  audio1: "1",
+  audio2: "2",
+  audio3: "3",
+  audio4: "4",
+  audio5: "5",
+  audio6: "Q",
+  audio7: "W",
+  audio8: "E",
+  audio9: "R",
+  audio10: "T",
+  audio11: "A",
+  audio12: "S",
+  audio13: "D",
+  audio14: "F",
+  audio15: "G",
+  audio16: "Z",
+  audio17: "X",
+  audio18: "C",
+  audio19: "V",
+  audio20: "B",
+  stop: "SPACE",
+};

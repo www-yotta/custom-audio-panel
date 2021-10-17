@@ -4,9 +4,10 @@ import styles from "./SoundButton.module.scss";
 import { SettingContext } from "../App";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { audioKey } from "../utils/audioKeyBind";
+import { KeyBackground } from "./KeyBackground";
 
 type SoundButtonProps = {
-  name?: string;
+  name: string;
 };
 export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
   const { isSetting, isAllDelete, isStopAudio } = useContext(SettingContext);
@@ -103,6 +104,7 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
     <>
       {audio && audio.src ? (
         <div className={styles.root}>
+          <KeyBackground name={strageName} />
           <div
             // TODO: 見直したい
             className={styles.clickArea + (isSetting ? " " + styles.edit : "")}
@@ -129,6 +131,7 @@ export const SoundButton: FC<SoundButtonProps> = ({ name: strageName }) => {
       ) : (
         <div className={styles.root} {...getRootProps()}>
           <input {...getInputProps()} />
+          {/* <KeyBackground name={strageName} /> */}
           <p>登録する</p>
         </div>
       )}
